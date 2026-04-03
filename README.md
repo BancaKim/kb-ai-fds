@@ -55,11 +55,23 @@ KB 인도네시아(PT Bank KB Bukopin)를 대상으로 한 LLM 기반 AI 이상�
 
 당근페이는 룰엔진을 **레고 블록**처럼 조합 가능한 구조로 설계했다:
 
-```
-Condition (원자적 조건)  →  Rule (조건 조합)  →  Policy (규칙 묶음)
-     is_new_account()          mule_account_suspect     domestic_transfer
-     is_large_amount()         sim_swap_fraud           international_remittance
-     is_night_transaction()    voice_phishing_suspect
+```mermaid
+graph LR
+    subgraph Condition["Condition (원자적 조건)"]
+        C1[is_new_account]
+        C2[is_large_amount]
+        C3[is_night_transaction]
+    end
+    subgraph Rule["Rule (조건 조합)"]
+        R1[mule_account_suspect]
+        R2[sim_swap_fraud]
+        R3[voice_phishing_suspect]
+    end
+    subgraph Policy["Policy (규칙 묶음)"]
+        P1[domestic_transfer]
+        P2[international_remittance]
+    end
+    Condition --> Rule --> Policy
 ```
 
 - **Condition**: 가장 작은 단위의 판별 함수. `is_new_account()`, `is_large_amount()` 등
@@ -87,10 +99,9 @@ Condition (원자적 조건)  →  Rule (조건 조합)  →  Policy (규칙 묶
 
 당근페이 교훈: RetrieveAndGenerate 같은 올인원 API 대신 **각 단계를 수동으로 제어**해야 프롬프트와 검색 품질을 세밀하게 튜닝할 수 있다.
 
-```
-Step 1: ChromaDB에서 유사 사기 사례 검색 (Retrieve)
-Step 2: 검색 결과 + 거래 정보 + 룰엔진 결과로 프롬프트 구성 (Prompt Construction)
-Step 3: OpenAI API 호출 (Generation)
+```mermaid
+graph LR
+    S1["Step 1: Retrieve<br/>ChromaDB 유사 사기 사례 검색"] --> S2["Step 2: Prompt Construction<br/>검색 결과 + 거래 정보 + 룰엔진 결과"] --> S3["Step 3: Generation<br/>OpenAI API 호출"]
 ```
 
 **본 프로젝트 적용**: `llm/evaluator.py`의 `evaluate_transaction()` 함수가 이 3단계를 순차 실행
@@ -120,68 +131,48 @@ Step 3: OpenAI API 호출 (Generation)
 
 ### 3.1 전체 처리 흐름
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        거래 발생 (Event)                         │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    1단계: 룰엔진 평가                             │
-│                                                                  │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐                   │
-│  │ Condition │───▶│   Rule   │───▶│  Policy  │                   │
-│  │ (15개)    │    │ (13개)   │    │ (2개)    │                   │
-│  └──────────┘    └──────────┘    └──────────┘                   │
-│                                                                  │
-│  출력: risk_score (0~100), triggered_rules, should_invoke_llm    │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                   risk_score >= llm_threshold (50)?
-                             │
-                    Yes ──────┼────── No
-                    │                  │
-                    ▼                  ▼
-┌────────────────────────┐  ┌──────────────────┐
-│  2단계: LLM + RAG 평가  │  │ 룰엔진 결과만으로  │
-│                         │  │ 최종 판정          │
-│  1) ChromaDB 유사사례   │  └──────────────────┘
-│  2) XML 프롬프트 구성   │
-│  3) GPT-4o API 호출     │
-│  4) JSON 응답 파싱      │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  3단계: 최종 판정 (Post-processing)               │
-│                                                                  │
-│  Safety Guard 1: 강제차단 규칙 → 무조건 BLOCK                    │
-│  Safety Guard 2: 고위험 점수 → LLM de-escalate 불가              │
-│  Safety Guard 3: LLM confidence 낮으면 → 룰엔진 우선             │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              결과: risk_level + recommended_action                │
-│              HIGH/MEDIUM/LOW + BLOCK/REVIEW/ALERT/ALLOW          │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["거래 발생 (Event)"] --> B
+
+    subgraph B["1단계: 룰엔진 평가"]
+        B1["Condition (15개)"] --> B2["Rule (13개)"] --> B3["Policy (2개)"]
+        B4["출력: risk_score (0~100), triggered_rules, should_invoke_llm"]
+    end
+
+    B --> C{"risk_score >= llm_threshold (50)?"}
+    C -- Yes --> D
+    C -- No --> E["룰엔진 결과만으로 최종 판정"]
+
+    subgraph D["2단계: LLM + RAG 평가"]
+        D1["1) ChromaDB 유사사례 검색"]
+        D2["2) XML 프롬프트 구성"]
+        D3["3) GPT-4o API 호출"]
+        D4["4) JSON 응답 파싱"]
+        D1 --> D2 --> D3 --> D4
+    end
+
+    D --> F
+    E --> F
+
+    subgraph F["3단계: 최종 판정 (Post-processing)"]
+        F1["Safety Guard 1: 강제차단 규칙 → 무조건 BLOCK"]
+        F2["Safety Guard 2: 고위험 점수 → LLM de-escalate 불가"]
+        F3["Safety Guard 3: LLM confidence 낮으면 → 룰엔진 우선"]
+    end
+
+    F --> G["결과: risk_level + recommended_action<br/>HIGH/MEDIUM/LOW + BLOCK/REVIEW/ALERT/ALLOW"]
 ```
 
 ### 3.2 기술 스택
 
-```
-┌───────────────────────────────────────────────┐
-│            Streamlit Dashboard (8501)          │  ← 관리자 UI
-├───────────────────────────────────────────────┤
-│            FastAPI Server (8000)               │  ← REST API
-├──────────┬──────────┬─────────────────────────┤
-│ Rule     │ LLM      │ RAG                     │
-│ Engine   │ Evaluator│ (ChromaDB)              │
-│          │          │ text-embedding-3-small   │
-│          │ GPT-4o   │                         │
-├──────────┴──────────┴─────────────────────────┤
-│            SQLite (fds.db)                     │  ← 설정/결과 저장
-└───────────────────────────────────────────────┘
+```mermaid
+block-beta
+    columns 3
+    A["Streamlit Dashboard (8501) — 관리자 UI"]:3
+    B["FastAPI Server (8000) — REST API"]:3
+    C["Rule Engine"] D["LLM Evaluator<br/>GPT-4o"] E["RAG<br/>ChromaDB<br/>text-embedding-3-small"]
+    F["SQLite (fds.db) — 설정/결과 저장"]:3
 ```
 
 ---
@@ -255,32 +246,16 @@ risk_score = min(sum(triggered_rule.score for rule in triggered_rules), 100)
 
 ### 4.5 최종 판정 로직
 
-```
-입력: rule_result (룰엔진), llm_result (LLM, nullable)
-                    │
-    ┌───────────────┴───────────────┐
-    │ Safety Guard 1                 │
-    │ 강제차단 규칙 트리거?           │
-    │ (blacklisted_recipient OR      │
-    │  high_risk_remittance)         │
-    └───────┬───────────┬───────────┘
-        Yes │           │ No
-            ▼           ▼
-      HIGH/BLOCK   ┌───────────────────┐
-                   │ Safety Guard 2     │
-                   │ rule_score >= 80?  │
-                   └───┬───────┬───────┘
-                   Yes │       │ No
-                       ▼       ▼
-                 HIGH/BLOCK  ┌───────────────────┐
-                 (LLM이      │ Safety Guard 3     │
-                  HIGH면      │ LLM confidence    │
-                  LLM 반영)   │ >= 50?            │
-                             └───┬───────┬───────┘
-                             Yes │       │ No
-                                 ▼       ▼
-                           LLM 판정   룰엔진 기반
-                           사용       점수 판정
+```mermaid
+flowchart TD
+    INPUT["입력: rule_result (룰엔진), llm_result (LLM, nullable)"]
+    INPUT --> SG1{"Safety Guard 1<br/>강제차단 규칙 트리거?<br/>(blacklisted_recipient OR<br/>high_risk_remittance)"}
+    SG1 -- Yes --> BLOCK1["HIGH / BLOCK"]
+    SG1 -- No --> SG2{"Safety Guard 2<br/>rule_score >= 80?"}
+    SG2 -- Yes --> BLOCK2["HIGH / BLOCK<br/>(LLM이 HIGH면 LLM 반영)"]
+    SG2 -- No --> SG3{"Safety Guard 3<br/>LLM confidence >= 50?"}
+    SG3 -- Yes --> LLM["LLM 판정 사용"]
+    SG3 -- No --> RULE["룰엔진 기반 점수 판정"]
 ```
 
 ---
@@ -333,17 +308,9 @@ aifds/
 
 모든 룰엔진 파라미터가 SQLite DB에 저장되어 **서버 재시작 없이 런타임 수정** 가능:
 
-```
-관리자 UI (Streamlit)
-    │
-    ▼ HTTP PUT
-FastAPI /api/rules/{rule_name}
-    │
-    ▼ DB UPDATE + audit_log INSERT
-SQLite (rule_configs 테이블)
-    │
-    ▼ 다음 거래 평가 시
-rule_engine 모듈이 DB에서 최신 설정 로드
+```mermaid
+flowchart TD
+    A["관리자 UI (Streamlit)"] -- "HTTP PUT" --> B["FastAPI /api/rules/{rule_name}"] -- "DB UPDATE + audit_log INSERT" --> C["SQLite (rule_configs 테이블)"] -- "다음 거래 평가 시" --> D["rule_engine 모듈이 DB에서 최신 설정 로드"]
 ```
 
 수정 가능 항목:
@@ -360,25 +327,9 @@ rule_engine 모듈이 DB에서 최신 설정 로드
 
 ### 6.1 RAG 파이프라인
 
-```
-                     ┌──────────────────────────────┐
-                     │  data/fraud_cases/            │
-                     │  case_001.json ~ case_012.json│
-                     └──────────┬───────────────────┘
-                                │ 서버 시작 시 시딩
-                                ▼
-                     ┌──────────────────────────────┐
-                     │  ChromaDB (로컬 PersistentClient) │
-                     │  Collection: fraud_cases      │
-                     │  Embedding: text-embedding-3-small │
-                     │  Distance: cosine             │
-                     └──────────┬───────────────────┘
-                                │ 유사도 검색 (top_k=3)
-                                ▼
-                     ┌──────────────────────────────┐
-                     │  유사 사기 사례 (Similar Cases) │
-                     │  + similarity_score           │
-                     └──────────────────────────────┘
+```mermaid
+flowchart TD
+    A["data/fraud_cases/<br/>case_001.json ~ case_012.json"] -- "서버 시작 시 시딩" --> B["ChromaDB (로컬 PersistentClient)<br/>Collection: fraud_cases<br/>Embedding: text-embedding-3-small<br/>Distance: cosine"] -- "유사도 검색 (top_k=3)" --> C["유사 사기 사례 (Similar Cases)<br/>+ similarity_score"]
 ```
 
 #### 지식베이스 구성 (12개 사기 사례)
