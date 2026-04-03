@@ -1,0 +1,17 @@
+{
+  "case_id": "FRAUD-2026-012",
+  "fraud_type": "money_laundering",
+  "date": "2026-03-25",
+  "country": "ID",
+  "description": "A long-standing BNI Taplus Bisnis account holder, a certified halal food export company based in Makassar, initiated a single outbound RTGS transfer of IDR 2,750,000,000 to a correspondent account at Bank Syariah Indonesia (BSI) for the purpose of purchasing a shipment of cacao derivatives destined for the Middle East. The transaction triggered an automated alert due to the amount exceeding the account's 90-day average single transaction value by 340%. Upon investigation by the compliance team, the transfer was found to be fully legitimate: supporting documentation included a valid export LC (Letter of Credit) issued by a reputable UAE bank, Bapebti export licensing, confirmed purchase orders, and a verified track record with the BSI destination account. The account holder's business had recently won a new export contract following Ramadan season demand.",
+  "indicators": [
+    "large_single_transaction_above_average",
+    "rtgs_transfer_above_1_billion_idr",
+    "automated_velocity_alert_triggered",
+    "seasonal_business_spike_ramadan",
+    "new_large_counterparty_first_transfer"
+  ],
+  "amount_range": "2700000000-2800000000 IDR",
+  "outcome": "false_positive",
+  "action_taken": "alert_only"
+}

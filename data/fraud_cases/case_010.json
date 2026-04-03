@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-010",
+  "fraud_type": "account_takeover",
+  "date": "2026-02-18",
+  "country": "ID",
+  "description": "A CIMB Niaga Octo Mobile user in Surabaya had their account taken over through a combination of credential stuffing and SMS OTP interception. The attacker used email and password credentials obtained from a dark web dump of an Indonesian ride-hailing service breach to access the victim's Octo Mobile app after the victim had reused the same password. The attacker then initiated an account recovery flow, intercepting the OTP SMS using SS7 network vulnerability exploitation. After gaining full control, the attacker added two new payee accounts, changed the daily transfer limit from IDR 25,000,000 to IDR 200,000,000, and transferred IDR 187,000,000 to these accounts over 8 hours. The bank's behavioral analytics detected the limit change as anomalous and raised an alert, but the fraud was only stopped after the second transfer when the system flagged the new payee velocity.",
+  "indicators": [
+    "credential_stuffing_from_darkweb_breach",
+    "password_reuse_across_services",
+    "ss7_otp_interception",
+    "daily_limit_increase_anomaly",
+    "new_payee_addition_high_velocity",
+    "behavioral_analytics_alert",
+    "octo_mobile_session_from_unknown_device",
+    "8_hour_fund_drain_pattern"
+  ],
+  "amount_range": "180000000-195000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "account_blocked"
+}

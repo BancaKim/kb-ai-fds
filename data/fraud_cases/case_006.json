@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-006",
+  "fraud_type": "voice_phishing",
+  "date": "2026-01-29",
+  "country": "ID",
+  "description": "A retired civil servant (pensiunan PNS) in Yogyakarta received a phone call from a number spoofed to display as the official Bank Indonesia hotline (021-131). The caller, speaking in formal Javanese-accented Indonesian, claimed the victim's account was flagged for suspicious activity and would be frozen unless they immediately transferred funds to a 'safe account' (rekening aman) for 'temporary safekeeping'. Under pressure, the victim made three transfers via ATM totaling IDR 78,000,000 to an account the fraudster claimed belonged to 'OJK-authorized security'. The victim was instructed not to tell anyone including bank staff, citing 'ongoing investigation secrecy'. The receiving account had been opened 3 days prior and withdrew cash via ATM in Semarang within 30 minutes of each transfer.",
+  "indicators": [
+    "caller_id_spoofing_official_number",
+    "safe_account_scam_rekening_aman",
+    "elderly_victim_targeting",
+    "atm_transfer_under_verbal_instruction",
+    "secrecy_instruction_to_victim",
+    "rapid_cash_withdrawal_by_recipient",
+    "formal_language_authority_impersonation",
+    "destination_account_less_than_7_days_old"
+  ],
+  "amount_range": "70000000-85000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "account_blocked"
+}

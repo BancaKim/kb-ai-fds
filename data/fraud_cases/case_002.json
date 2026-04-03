@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-002",
+  "fraud_type": "mule_account",
+  "date": "2026-01-21",
+  "country": "ID",
+  "description": "A dormant Mandiri savings account (last active 18 months ago) was suddenly reactivated following a mobile banking password reset. Within 48 hours, the account received three transfers of IDR 49,500,000 each (just below the IDR 50,000,000 OJK reporting threshold) from an account later linked to a pig butchering (jagal babi) crypto scam operation. The funds were immediately converted via a P2P crypto exchange platform registered in Indonesia. The device fingerprint used for the password reset did not match any previously known device, and the SIM card associated with the registered phone number had been swapped 6 days prior. The account holder, when contacted, stated they had no knowledge of the transactions and believed they had lost their phone.",
+  "indicators": [
+    "dormant_account_sudden_reactivation",
+    "structuring_below_ojk_50m_threshold",
+    "device_fingerprint_mismatch",
+    "sim_swap_detected_prior_to_reactivation",
+    "rapid_crypto_conversion",
+    "pig_butchering_scam_link",
+    "password_reset_from_unknown_device",
+    "account_holder_unaware_of_transactions"
+  ],
+  "amount_range": "140000000-160000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "account_blocked"
+}

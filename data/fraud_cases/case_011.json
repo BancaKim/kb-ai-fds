@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-011",
+  "fraud_type": "social_engineering",
+  "date": "2026-03-19",
+  "country": "ID",
+  "description": "A university student in Depok was recruited on Instagram by an account posing as a legitimate part-time job recruiter for a well-known Indonesian e-commerce platform (Tokopedia lookalike branding). The victim was instructed to receive funds into their bank account and forward them minus a 'processing commission', framed as a product refund testing task (tugas refund produk). Over 4 days, the victim processed 12 transactions totaling IDR 56,000,000, believing this was legitimate employment. The victim was then informed they had 'accidentally been sent too much' and must repay IDR 23,000,000 from their own savings before they could receive their commission. This is a classic advance fee / overpayment social engineering scheme. The initial funds received by the victim originated from other fraud victims (voice phishing proceeds), making the student both a victim and an unwitting mule.",
+  "indicators": [
+    "instagram_fake_job_recruitment",
+    "ecommerce_brand_impersonation",
+    "refund_processing_task_pretext",
+    "advance_fee_overpayment_scheme",
+    "victim_also_unwitting_mule",
+    "voice_phishing_proceeds_layered",
+    "commission_withholding_pressure",
+    "4_day_multi_transaction_pattern"
+  ],
+  "amount_range": "50000000-60000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "under_investigation"
+}

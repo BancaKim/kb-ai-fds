@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-001",
+  "fraud_type": "mule_account",
+  "date": "2026-01-08",
+  "country": "ID",
+  "description": "A newly registered BRI account (opened 5 days prior) received 14 rapid inbound transfers totaling IDR 185,000,000 from 9 different source accounts across BCA, Mandiri, and BNI within a 3-hour window. The account holder is a 22-year-old with no prior banking history. Immediately after aggregation, funds were fanned out to 6 further accounts via BI-FAST. The account holder's registered address in Surabaya did not match the device IP geolocation (Jakarta). The recruiter offered the account holder IDR 1,500,000 per day for use of the account via a Telegram group advertising 'easy money jobs'. Pattern is consistent with first-layer mule accounts used in online investment scam (investasi bodong) fund layering.",
+  "indicators": [
+    "account_age_less_than_7_days",
+    "rapid_inbound_transfers_from_multiple_sources",
+    "immediate_outbound_fan_out_after_aggregation",
+    "ip_geolocation_mismatch_with_registered_address",
+    "no_prior_banking_history",
+    "transaction_velocity_anomaly",
+    "cross_bank_aggregation_pattern",
+    "telegram_mule_recruitment_suspected"
+  ],
+  "amount_range": "150000000-200000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "account_blocked"
+}

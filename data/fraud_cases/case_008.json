@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-008",
+  "fraud_type": "money_laundering",
+  "date": "2026-01-15",
+  "country": "ID",
+  "description": "A network of 11 individual accounts across Bank Danamon and OCBC NISP received structured deposits in amounts ranging from IDR 45,000,000 to IDR 49,800,000 — all deliberately structured below PPATK's IDR 500,000,000 cash transaction report (CTR) trigger and below PPATK's IDR 100,000,000 suspicious transaction threshold. Over a 3-week period, total funds introduced into the network amounted to IDR 1,850,000,000. The funds originated from proceeds of illegal online gambling operations (judol) run via servers hosted overseas. After multiple intra-network transfers to create layering distance, funds were ultimately used to purchase 4 residential properties in Tangerang Selatan through a shell developer company. PPATK's suspicious transaction monitoring identified the structuring pattern through velocity analysis across the network.",
+  "indicators": [
+    "structuring_below_ppatk_ctr_threshold",
+    "11_account_network_coordination",
+    "illegal_online_gambling_proceeds",
+    "intra_network_layering_transfers",
+    "real_estate_integration_phase",
+    "shell_company_used_for_property_purchase",
+    "ppatk_velocity_analysis_triggered",
+    "overseas_server_gambling_operation"
+  ],
+  "amount_range": "1800000000-1900000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "under_investigation"
+}

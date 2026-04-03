@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-003",
+  "fraud_type": "mule_account",
+  "date": "2026-02-14",
+  "country": "ID",
+  "description": "Three accounts opened at different regional BPD (Bank Pembangunan Daerah) branches in East Java — two in Malang and one in Kediri — within the same week were used as a coordinated mule network. Each account received inbound RTGS transfers from a Jakarta-based shell company account before distributing proceeds in smaller BI-FAST tranches to dozens of end recipients. The shell company had been used to route proceeds from a fake e-commerce scheme (toko online palsu) defrauding consumers of luxury goods. All three mule account holders shared the same recruiter phone number found in WhatsApp chat logs provided by one cooperating account holder. Total layered amount across all three accounts was approximately IDR 620,000,000 over 5 days.",
+  "indicators": [
+    "coordinated_multi_account_opening_same_week",
+    "rtgs_inbound_from_shell_company",
+    "fan_out_to_multiple_end_recipients",
+    "shared_recruiter_contact_across_accounts",
+    "fake_ecommerce_fraud_proceeds",
+    "cross_branch_coordination_pattern",
+    "high_velocity_bi_fast_outbound",
+    "whatsapp_evidence_of_recruitment"
+  ],
+  "amount_range": "600000000-650000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "account_blocked"
+}

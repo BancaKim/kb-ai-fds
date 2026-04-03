@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-009",
+  "fraud_type": "money_laundering",
+  "date": "2026-03-02",
+  "country": "ID",
+  "description": "A Permata Bank corporate account registered as a CV (Commanditaire Vennootschap) importing textile goods received large SWIFT remittances from Hong Kong and Singapore totaling the equivalent of IDR 4,200,000,000 over 6 weeks. However, import documentation submitted to the bank showed invoiced goods worth only IDR 890,000,000, indicating significant trade-based money laundering (TBML) via over-invoicing. The excess funds, approximately IDR 3,310,000,000, were distributed via RTGS to a network of 8 supplier accounts, several of which were linked to a narcotics trafficking syndicate under investigation by BNN (Badan Narkotika Nasional). The CV had been incorporated only 4 months prior and had no prior import/export history. Bank Indonesia's SLIK check showed no credit history for the directors.",
+  "indicators": [
+    "trade_based_money_laundering_tbml",
+    "over_invoicing_import_documentation",
+    "swift_remittance_invoice_mismatch",
+    "cv_incorporated_4_months_prior",
+    "no_prior_import_export_history",
+    "rtgs_distribution_to_supplier_network",
+    "bnn_narcotics_syndicate_link",
+    "slik_no_credit_history_directors"
+  ],
+  "amount_range": "4000000000-4500000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "under_investigation"
+}

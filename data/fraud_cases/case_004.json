@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-004",
+  "fraud_type": "sim_swap",
+  "date": "2026-02-03",
+  "country": "ID",
+  "description": "A BCA Tahapan Gold account holder in Bandung had their Telkomsel SIM card fraudulently swapped at an authorized dealer outlet in Bekasi using a forged KTP (national ID). Within 2 hours of the SIM swap, the attacker received OTP SMS for BCA mobile banking login and successfully changed the transaction PIN. A total of IDR 95,000,000 was transferred in two transactions — IDR 50,000,000 to an account at Bank Neo Commerce and IDR 45,000,000 to a GoPay wallet — before the legitimate account holder noticed loss of cellular signal and reported to Telkomsel. The KTP used at the dealer had the victim's name but a different photo and fabricated NIK number. BCA's fraud detection flagged the login from a new device in a different province but the OTP confirmation bypassed the alert.",
+  "indicators": [
+    "sim_swap_via_forged_ktp",
+    "new_device_login_different_province",
+    "otp_received_on_swapped_sim",
+    "transaction_pin_change_post_swap",
+    "rapid_fund_transfer_post_compromise",
+    "transfer_to_neobank_and_ewallet",
+    "victim_loss_of_cellular_signal",
+    "forged_identity_document"
+  ],
+  "amount_range": "90000000-100000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "transaction_reversed"
+}

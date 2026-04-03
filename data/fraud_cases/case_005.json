@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-005",
+  "fraud_type": "sim_swap",
+  "date": "2026-03-11",
+  "country": "ID",
+  "description": "An Indosat Ooredoo subscriber and Mandiri Priority banking customer in Jakarta Selatan was targeted by a SIM swap attack orchestrated through social engineering of the mobile operator's customer service hotline. The attacker, posing as the victim using personal data obtained from a data breach of an Indonesian e-commerce platform, convinced the operator to transfer the number to a new SIM. Within 90 minutes of the swap, the attacker authenticated into Mandiri Online, passed the OTP verification, and initiated a Mandiri transfer of IDR 250,000,000 to a CIMB Niaga account. The CIMB Niaga destination account was opened the same morning using an e-KTP from a different region, consistent with a mule account. The victim only discovered the fraud when attempting to call a contact and receiving a 'number not active' message.",
+  "indicators": [
+    "sim_swap_via_call_center_social_engineering",
+    "victim_data_from_ecommerce_breach",
+    "high_value_priority_customer_target",
+    "otp_bypass_via_swapped_sim",
+    "destination_account_opened_same_day",
+    "mule_account_as_destination",
+    "90_minute_attack_window",
+    "victim_discovered_via_outgoing_call_failure"
+  ],
+  "amount_range": "240000000-260000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "transaction_reversed"
+}

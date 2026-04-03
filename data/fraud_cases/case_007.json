@@ -1,0 +1,20 @@
+{
+  "case_id": "FRAUD-2026-007",
+  "fraud_type": "voice_phishing",
+  "date": "2026-02-27",
+  "country": "ID",
+  "description": "A small business owner (UMKM operator) in Medan received a WhatsApp call from a number presenting itself as a BNI customer service agent. The caller informed the victim that their BNI Wirausaha business account was to be upgraded and required re-verification of their token device. The fraudster then conducted a 'verification call' during which they convinced the victim to read out their mToken one-time password under the pretense of 'system synchronization'. Using the captured OTP, the attacker authenticated the BNI mobile app on a separate device and transferred IDR 135,000,000 in three transactions to two Bank Jago accounts and one SeaBank account. All three destination accounts had been opened within the past 10 days using selfie-based e-KYC with potentially spoofed liveness detection. The victim reported the fraud 4 hours later after noticing SMS transaction alerts.",
+  "indicators": [
+    "whatsapp_call_impersonating_bank_cs",
+    "otp_harvesting_via_social_engineering",
+    "mtoken_captured_verbally",
+    "sms_debit_alert_triggered_victim_report",
+    "multiple_neobank_destination_accounts",
+    "destination_accounts_opened_within_10_days",
+    "liveness_spoof_suspected_in_ekyc",
+    "umkm_business_account_targeting"
+  ],
+  "amount_range": "130000000-140000000 IDR",
+  "outcome": "confirmed_fraud",
+  "action_taken": "transaction_reversed"
+}
